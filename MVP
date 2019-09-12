@@ -1,0 +1,116 @@
+import random
+
+
+gameboard = []
+
+for row in range(0,4):
+  gameboard.append([" ", " ", " ", " "])
+
+
+#FUNCTION TO DISPLAY A BLANK GAMEBOARD
+def display_gameboard():
+  print()
+  print("_________________")
+  print("|", gameboard[0][0], "|", gameboard[0][1], "|", gameboard[0][2], "|", gameboard[0][3], "|")
+  print("-----------------")
+  print("|", gameboard[1][0], "|", gameboard[1][1], "|", gameboard[1][2], "|", gameboard[1][3], "|") 
+  print("-----------------")
+  print("|", gameboard[2][0], "|", gameboard[2][1], "|", gameboard[2][2], "|", gameboard[2][3], "|")
+  print("-----------------")
+  print("|", gameboard[3][0], "|", gameboard[3][1], "|", gameboard[3][2], "|", gameboard[3][3], "|")
+  print("_________________")
+  print()
+
+
+#FUNCTION TO ASSIGN TREASURE AND PLAYER POSITIONS ON GAMEBOARD
+# Randomly assign TREASURE a position on the board game
+treasure_row = random.randint(0,3)
+treasure_column = random.randint(0,3)
+gameboard[treasure_row][treasure_column] = " "
+
+# Randomly assign PLAYER a position on the board game
+player_row = random.randint(0,3)
+player_column = random.randint(0,3)
+gameboard[player_row][player_column] = "P"
+
+display_gameboard()
+
+
+#GETTING THE PLAYER TO MOVE POSITIONS ON THE BOARD (LEFT, RIGHT, UP, DOWN) ----------------
+def move_position(player_row, player_column):
+  print("Where to next?")
+  print(" Press L to move left")
+  print(" Press R to move right")
+  print(" Press U to move up")
+  print(" Press D to move down")
+  
+  user_move_position = (input("> ")).upper()
+
+  if user_move_position == "L" and player_column > 0:
+    gameboard[player_row][player_column] = "x"
+    player_column = player_column - 1
+    gameboard[player_row][player_column] = "P"
+
+  elif user_move_position == "R" and player_column < 3:
+    gameboard[player_row][player_column] = "x"
+    player_column = player_column + 1
+    gameboard[player_row][player_column] = "P"
+
+  elif user_move_position == "U" and player_row > 0:
+    gameboard[player_row][player_column] = "x"
+    player_row = player_row - 1
+    gameboard[player_row][player_column] = "P"
+
+  elif user_move_position == "D" and player_row < 3:
+    gameboard[player_row][player_column] = "x"
+    player_row = player_row + 1
+    gameboard[player_row][player_column] = "P"
+
+  else:
+    print()
+    print("Arrghh matey!")
+    print("Invalid move, please try again!")
+    print()
+
+  display_gameboard()
+
+  return player_row, player_column
+
+
+
+
+# -------------  MAIN FUNCTION TO START AND PLAY GAME  -------------
+def play_boardgame():
+  print()
+  print("Welcome to")
+  print()
+  print("FIND THE BOOTY!")
+  print()
+  print("The goal of this game is to find the booty!") 
+  print("Beware of other pirates!")
+  print("If you land on an event tile, you can either gain an extra life or teleport to a random space.")
+
+
+
+while True:
+  #function allowing PLAYER to move spaces
+  player_row, player_column = move_position(player_row, player_column)
+    
+  if player_row == treasure_row and player_column == treasure_column:
+    print("Congrats Matey!")
+    print("You have found the booty!")
+    break
+  
+  else:
+    empty_position_list =[
+    "Shiver me timbers, try again!",
+    "Blimey! Nothin' here mate!",
+    "Avast ye! We must try again!"]
+    empty_position_string = random.choice(empty_position_list)
+    print()
+    print(empty_position_string)
+    print()
+
+
+
+
