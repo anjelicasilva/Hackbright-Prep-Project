@@ -1,0 +1,50 @@
+# TITLE: Find the Booty
+
+# setup function:
+  # create the map, tile board game A-E, 1-5
+  # assign random game board coordinates to the player
+  # assign random game board coordinates to the Treasure
+  # set maximum the maximum number of lives to the player
+  # assign random game board coordinates to random events
+  # print gameboard
+
+# game function:
+  # while the player is still alive (number of lives are > 0),
+    # print gameboard
+    # get user input where player would like to move
+    # if tile is a valid game tile, move player there and mark "X" where player has been previously
+    # print gameboard
+    # if "treasure" is present
+      # set treasureFound to True
+      # break out of the while loop
+    # if the tile contains an event
+      # call the triggered event function
+
+
+# Function to check triggered events:
+  # if the tile contains a pirate event
+    # then call pirate event function
+  # if tile contains "Gain a life" event
+    # call gain life event function
+  # if tile contains "teleport" event
+    # call teleport event function
+  
+# Pirate event function
+  # ask player to pick heads or tails
+  # randomly generate a number between 1 and 2 (where 1 is heads and 2 is tails)
+  # if the player wins, he defeats the pirate
+  # if the pirate wins, the player loses a live
+    
+
+# Gain a life event function
+  # increase player life by a random number between 1-3
+
+
+# Teleport event function
+  #assign random new coordinates (cannot be the current player position) to the player
+
+
+
+# Winning/Losing conditions:
+#if treasure tile is found, print "Congratulations, you have found the treasure!"
+#if the player is dead (health points <= 0), print "Gameover!"
