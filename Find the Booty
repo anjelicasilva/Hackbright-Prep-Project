@@ -1,0 +1,392 @@
+import random
+import emoji
+import time
+import os
+
+
+
+#FUNCTION TO DETERMINE LEVEL DIFFICULTY (EASY, MEDIUM, HARD)
+def determine_level_difficulty():
+  print()
+  print("What level of difficulty would you like to play?")
+  print()
+  level_difficulty = ""
+  
+  dimension = 0
+  board_design = ""
+  player_life_points = 0
+  number_of_pirates = 0
+  number_of_teleports = 0
+
+  while level_difficulty.upper() not in ["E", "M", "H"]:
+    print("[E]asy, [M]edium, or [H]ard?")
+    level_difficulty = input("> ")
+
+    
+    if level_difficulty.upper() == "E":
+      dimension = 4
+      board_design = "\n-----------------\n"
+      player_life_points = 25
+      number_of_pirates = 1
+      number_of_teleports = 1
+    
+    elif level_difficulty.upper() == "M":
+      dimension = 6
+      board_design = "\n-------------------------\n"
+      player_life_points = 40
+      number_of_pirates = 2
+      number_of_teleports = 2
+    
+    elif level_difficulty.upper() == "H":
+      dimension = 8
+      board_design = "\n---------------------------------\n"
+      player_life_points = 60
+      number_of_pirates = 3
+      number_of_teleports = 3
+    
+    else:
+      print("Please try again.")
+  
+  return number_of_pirates, number_of_teleports, dimension, board_design, player_life_points
+
+
+
+#FUNCTION TO DISPLAY A BLANK GAMEBOARD
+def display_gameboard(player_life_points, dimension, gameboard, board_design):
+  print()
+  print()
+  time.sleep(.1)
+  print("Your life points: {}".format(player_life_points))
+  time.sleep(.1)
+  
+  board = board_design
+  for row in range(0,dimension):
+    for column in range(0, dimension):
+      board += "| " + gameboard[row][column] + " "
+    board += "|" + board_design
+  print(board)
+  
+
+
+#FUNCTION TO ASSIGN COORDINATES OF EVENTS ON GAMEBOARD
+def assign_event_position(player_row, player_column, cheat_sheet_gameboard, dimension):
+  event_row = player_row
+  event_column = player_column
+
+  while cheat_sheet_gameboard[event_row][event_column] != " ":
+    event_row = random.randint(0,(dimension-1))
+    event_column = random.randint(0,(dimension-1))
+  
+  return event_row, event_column
+
+
+
+#FUNCTION GETTING THE PLAYER TO MOVE POSITIONS ON THE BOARD (LEFT, RIGHT, UP, DOWN)
+def move_position(gameboard, player_row, player_column, dimension):
+  
+  time.sleep(.1)
+  print("Where to next?")
+  time.sleep(.1)
+  print(" Press L to move left")
+  time.sleep(.1)
+  print(" Press R to move right")
+  time.sleep(.1)
+  print(" Press U to move up")
+  time.sleep(.1)
+  print(" Press D to move down")
+  
+  time.sleep(.1)
+  user_move_position = (input("> ")).upper()
+
+  if user_move_position == "L" and player_column > 0:
+    gameboard[player_row][player_column] = "x"
+    player_column = player_column - 1
+    gameboard[player_row][player_column] = "P"
+
+  elif user_move_position == "R" and player_column < (dimension -1):
+    gameboard[player_row][player_column] = "x"
+    player_column = player_column + 1
+    gameboard[player_row][player_column] = "P"
+
+  elif user_move_position == "U" and player_row > 0:
+    gameboard[player_row][player_column] = "x"
+    player_row = player_row - 1
+    gameboard[player_row][player_column] = "P"
+
+  elif user_move_position == "D" and player_row < (dimension-1):
+    gameboard[player_row][player_column] = "x"
+    player_row = player_row + 1
+    gameboard[player_row][player_column] = "P"
+
+  else:
+    print()
+    time.sleep(.1)
+    print("Arrghh, invalid matey!")
+    print()
+
+  return gameboard, player_row, player_column
+
+
+
+# -------------  EVENT TILES  -------------
+
+# Roll Dice
+def pirate_battle(player_life_points):
+  
+  pirate_life_points = 25
+  
+  time.sleep(.1)
+  print("You have encountered a pirate and now have to battle.")
+  print()
+  time.sleep(.1)
+  print("Both of you will take turns rolling dice in order to attack one another. Whoever reaches zero life points first, loses the battle.")
+  print()
+  time.sleep(.1)
+  print(emoji.emojize(":skull: :skull: :skull:   LET THE BATTLE BEGIN    :skull: :skull: :skull: "))
+  print()
+  print("You will make the first attack")  
+    
+  while player_life_points > 0 and pirate_life_points > 0:
+    
+    print()
+    print("---------------------------------")
+    time.sleep(.1)
+    print("Your life points: {}".format(player_life_points))
+    print()
+    time.sleep(.1)
+    print("Pirate's life points: {}".format(pirate_life_points))
+    print("---------------------------------")
+    print()
+    print("Press 'R' to roll your dice.")
+    time.sleep(.1)
+    print()
+    print(" BEWARE!! If you misroll, the pirate can send a sneak attack. Pay attention closely!!!")
+    
+    player_roll = input("> ")
+    player_roll = player_roll.upper()
+
+    if player_roll == "R":
+      player_dice_one = random.randint(1,6)
+      print()
+      time.sleep(.1)
+      print("Your first dice rolled {}".format(player_dice_one))
+      
+      player_dice_two = random.randint(1,6)
+      time.sleep(.1)
+      print("Your second dice rolled {}".format(player_dice_two))
+      
+      pirate_life_points = pirate_life_points - (player_dice_one + player_dice_two)
+      
+      print()
+      time.sleep(.1)
+      print("You attacked the pirate leaving him with")
+      print()
+      time.sleep(.1)
+      print("{} life points".format(pirate_life_points))
+      print()
+    
+    else:
+      print("UH OH!")
+
+    if pirate_life_points <= 0:
+      time.sleep(.1)
+      print("Congrats matey! You've won the battle!")
+      time.sleep(.1)
+      print("Never return or we will have a rematch!")
+      break
+
+    time.sleep(.1)
+    print()
+    print("The pirate will now roll his dice.")
+    
+    pirate_dice_one = random.randint(1,6)
+    time.sleep(.1)
+    print()
+    print("The pirate's first dice rolled {}".format(pirate_dice_one))
+      
+    pirate_dice_two = random.randint(1,6)
+    time.sleep(.1)
+    print("The pirate's second dice rolled {}".format(pirate_dice_two))
+      
+    player_life_points = player_life_points - (pirate_dice_one + pirate_dice_two)
+      
+    print()
+    time.sleep(.1)
+    print("The pirate attacked you leaving you with")
+    print()
+    time.sleep(.1)
+    print("{} life points".format(player_life_points))
+    print()
+
+    print("---------------------------------")
+    time.sleep(.1)
+    print("Your life points: {}".format(player_life_points))
+    print()
+    time.sleep(.1)
+    print("Pirate's life points: {}".format(pirate_life_points))
+    print("---------------------------------")
+
+    if player_life_points <= 0:
+      time.sleep(.1)
+      print()
+      print()
+      print("Uh oh! You were defeated by the pirate! GAME OVER matey!")
+      print()
+      print()
+      break
+
+    player_roll = input("Press ENTER to continue...\n> ")
+    os.system('clear')
+  return player_life_points
+
+
+#Teleport Player on Gameboard
+def teleport_player(player_row, player_column, gameboard, cheat_sheet_gameboard):
+  
+  time.sleep(.1)
+  print("You have landed on a teleport space.")
+  time.sleep(.1)
+  print("You will be teleported to a new position!")
+
+  gameboard[player_row][player_column] = 'x'
+  cheat_sheet_gameboard[player_row][player_column] = 'x'
+  #this is to make sure the space is not another event
+  while cheat_sheet_gameboard[player_row][player_column] != " ":
+    player_row = random.randint(0,3)
+    player_column = random.randint(0,3)
+  time.sleep(.1)
+  print("You have now been teleported.")
+
+  return player_row, player_column
+
+
+#FUNCTION TO CHECK IF PLAYER LANDED ON EVENT TILE
+def check_if_event_tile(player_life_points, gameboard, player_row, player_column, cheat_sheet_gameboard):
+
+  
+  if cheat_sheet_gameboard[player_row][player_column] == "!":
+    player_life_points = pirate_battle(player_life_points)
+    cheat_sheet_gameboard[player_row][player_column] = 'x'
+
+  elif cheat_sheet_gameboard[player_row][player_column] == "^":
+    player_row, player_column = teleport_player(player_row, player_column, gameboard, cheat_sheet_gameboard)
+    gameboard[player_row][player_column] = "P"
+
+  elif cheat_sheet_gameboard[player_row][player_column] == "$":
+   
+    time.sleep(.1)
+    print("------------------------------------------------")
+    print()
+    time.sleep(.1)
+    print(emoji.emojize(":money_bag: :sparkles: :money_bag:  Congrats Matey! :money_bag: :sparkles: :money_bag:").center(40))
+    print()
+    time.sleep(.1)
+    print(emoji.emojize(":sparkles: :money_bag: :money_bag: :money_bag: :sparkles: You have found the booty! :sparkles: :money_bag: :money_bag: :money_bag: :sparkles:").center(25))
+    print()
+    time.sleep(.1)
+    print("------------------------------------------------")
+
+  else:
+    empty_position_list =[
+    "Shiver me timbers, try again!",
+    "Blimey! Nothin' here mate!",      
+    "Avast ye! We must try again!"]
+    empty_position_string = random.choice(empty_position_list)
+    print()      
+    print(empty_position_string)
+    print()
+
+  return player_life_points, gameboard, player_row, player_column
+
+
+
+
+
+# -------------  MAIN FUNCTION TO START AND PLAY GAME  -------------
+def play_boardgame():
+  
+  print()
+  print("Welcome to")
+  print()    
+  time.sleep(.1)
+  print(emoji.emojize(":money_bag:  FIND THE BOOTY! :money_bag:"))
+  print()
+  time.sleep(.1)
+  print("The goal of this game is to find the booty!") 
+  time.sleep(.1)
+  print("Beware of other pirates!")
+  time.sleep(.1)
+  print("If you land on an event tile, you can either teleport to a random space or battle a pirate.")
+
+  easy = 4
+  medium = 6
+  hard = 8
+
+  easy_board = "\n-----------------\n"
+  medium_board = "\n-------------------------\n"
+  hard_board = "\n---------------------------------\n"
+
+  player_life_points = 10
+  easy_player_life_points = 25
+  medium_player_life_points = 40
+  hard_player_life_points = 60
+
+
+  gameboard =[]
+
+  number_of_pirates, number_of_teleports, dimension, board_design, player_life_points = determine_level_difficulty()
+  
+
+  for row in range(0,dimension):
+    row_list = []
+    for column in range(0, dimension):
+      row_list.append(" ")
+    gameboard.append(row_list)
+
+  cheat_sheet_gameboard =[]
+
+  for row in range(0,dimension):
+    row_list = []
+    for column in range(0, dimension):
+      row_list.append(" ")
+    cheat_sheet_gameboard.append(row_list)
+
+
+  # Randomly assign PLAYER a position on the board game
+  player_row = random.randint(0,(dimension-1))
+  player_column = random.randint(0,(dimension-1))
+  gameboard[player_row][player_column] = "P"
+  cheat_sheet_gameboard[player_row][player_column] = "P"
+
+
+  # Randomly assign TREASURE a position on the board game
+  treasure_row, treasure_column = assign_event_position(player_row, player_column, cheat_sheet_gameboard, dimension)
+  cheat_sheet_gameboard[treasure_row][treasure_column] = "$"
+  
+
+
+  # Randomly assign PIRATE a position on the board game
+  for pirate in range(0, number_of_pirates):
+    pirate_row, pirate_column = assign_event_position(player_row, player_column, cheat_sheet_gameboard, dimension)
+    cheat_sheet_gameboard[pirate_row][pirate_column] = "!"
+    
+
+
+  # Randomly assign TELEPORT a position on the board game
+  for teleport in range(0, number_of_teleports):
+    teleport_row, teleport_column = assign_event_position(player_row, player_column, cheat_sheet_gameboard, dimension)
+    cheat_sheet_gameboard[teleport_row][teleport_column] = "^"
+    
+
+
+  while cheat_sheet_gameboard[player_row][player_column] != "$" and player_life_points > 0:
+    time.sleep(.1)
+    display_gameboard(player_life_points, dimension, gameboard, board_design)
+
+    #function allowing PLAYER to move spaces
+    gameboard, player_row, player_column = move_position(gameboard, player_row, player_column, dimension)
+    os.system('clear')
+
+    player_life_points, gameboard, player_row, player_column = check_if_event_tile(player_life_points, gameboard, player_row, player_column, cheat_sheet_gameboard)
+
+play_boardgame()
