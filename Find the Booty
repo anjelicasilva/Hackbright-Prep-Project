@@ -4,9 +4,9 @@ import time
 import os
 
 
-
-#FUNCTION TO DETERMINE LEVEL DIFFICULTY (EASY, MEDIUM, HARD)
 def determine_level_difficulty():
+  """ Determines what level of difficulty the user would like to play (Easy, Medium, or Hard)."""
+
   print()
   print("What level of difficulty would you like to play?")
   print()
@@ -21,7 +21,6 @@ def determine_level_difficulty():
   while level_difficulty.upper() not in ["E", "M", "H"]:
     print("[E]asy, [M]edium, or [H]ard?")
     level_difficulty = input("> ")
-
     
     if level_difficulty.upper() == "E":
       dimension = 4
@@ -50,9 +49,9 @@ def determine_level_difficulty():
   return number_of_pirates, number_of_teleports, dimension, board_design, player_life_points
 
 
-
-#FUNCTION TO DISPLAY A BLANK GAMEBOARD
 def display_gameboard(player_life_points, dimension, gameboard, board_design):
+  """ Displays the gameboard."""
+
   print()
   print()
   time.sleep(.1)
@@ -67,9 +66,9 @@ def display_gameboard(player_life_points, dimension, gameboard, board_design):
   print(board)
   
 
-
-#FUNCTION TO ASSIGN COORDINATES OF EVENTS ON GAMEBOARD
 def assign_event_position(player_row, player_column, cheat_sheet_gameboard, dimension):
+  """ Assigns random coordinates for all events on the gameboard."""
+
   event_row = player_row
   event_column = player_column
 
@@ -80,9 +79,8 @@ def assign_event_position(player_row, player_column, cheat_sheet_gameboard, dime
   return event_row, event_column
 
 
-
-#FUNCTION GETTING THE PLAYER TO MOVE POSITIONS ON THE BOARD (LEFT, RIGHT, UP, DOWN)
 def move_position(gameboard, player_row, player_column, dimension):
+  """ Asks the user where they would like to move next on the gameboard (left, right, up, or down)."""
   
   time.sleep(.1)
   print("Where to next?")
@@ -127,11 +125,8 @@ def move_position(gameboard, player_row, player_column, dimension):
   return gameboard, player_row, player_column
 
 
-
-# -------------  EVENT TILES  -------------
-
-# Roll Dice
 def pirate_battle(player_life_points):
+  """ This begins the pirate battle consisting of rolling dice."""
   
   pirate_life_points = 25
   
@@ -240,8 +235,8 @@ def pirate_battle(player_life_points):
   return player_life_points
 
 
-#Teleport Player on Gameboard
 def teleport_player(player_row, player_column, gameboard, cheat_sheet_gameboard):
+  """ Teleports the user to another position on the gameboard that has not been previously chosen."""
   
   time.sleep(.1)
   print("You have landed on a teleport space.")
@@ -260,10 +255,9 @@ def teleport_player(player_row, player_column, gameboard, cheat_sheet_gameboard)
   return player_row, player_column
 
 
-#FUNCTION TO CHECK IF PLAYER LANDED ON EVENT TILE
 def check_if_event_tile(player_life_points, gameboard, player_row, player_column, cheat_sheet_gameboard):
+  """Checks and cross-references with the cheatsheet gameboard on whether the user has landed on any event tile."""
 
-  
   if cheat_sheet_gameboard[player_row][player_column] == "!":
     player_life_points = pirate_battle(player_life_points)
     cheat_sheet_gameboard[player_row][player_column] = 'x'
@@ -299,12 +293,9 @@ def check_if_event_tile(player_life_points, gameboard, player_row, player_column
   return player_life_points, gameboard, player_row, player_column
 
 
-
-
-
-# -------------  MAIN FUNCTION TO START AND PLAY GAME  -------------
 def play_boardgame():
-  
+  """ Main function to start playing Find the Booty."""
+
   print()
   print("Welcome to")
   print()    
@@ -331,12 +322,10 @@ def play_boardgame():
   medium_player_life_points = 40
   hard_player_life_points = 60
 
-
   gameboard =[]
 
   number_of_pirates, number_of_teleports, dimension, board_design, player_life_points = determine_level_difficulty()
   
-
   for row in range(0,dimension):
     row_list = []
     for column in range(0, dimension):
@@ -351,34 +340,26 @@ def play_boardgame():
       row_list.append(" ")
     cheat_sheet_gameboard.append(row_list)
 
-
   # Randomly assign PLAYER a position on the board game
   player_row = random.randint(0,(dimension-1))
   player_column = random.randint(0,(dimension-1))
   gameboard[player_row][player_column] = "P"
   cheat_sheet_gameboard[player_row][player_column] = "P"
 
-
   # Randomly assign TREASURE a position on the board game
   treasure_row, treasure_column = assign_event_position(player_row, player_column, cheat_sheet_gameboard, dimension)
   cheat_sheet_gameboard[treasure_row][treasure_column] = "$"
-  
 
-
-  # Randomly assign PIRATE a position on the board game
+  # Randomly assign PIRATE BATTLE a position on the board game
   for pirate in range(0, number_of_pirates):
     pirate_row, pirate_column = assign_event_position(player_row, player_column, cheat_sheet_gameboard, dimension)
     cheat_sheet_gameboard[pirate_row][pirate_column] = "!"
     
-
-
   # Randomly assign TELEPORT a position on the board game
   for teleport in range(0, number_of_teleports):
     teleport_row, teleport_column = assign_event_position(player_row, player_column, cheat_sheet_gameboard, dimension)
     cheat_sheet_gameboard[teleport_row][teleport_column] = "^"
     
-
-
   while cheat_sheet_gameboard[player_row][player_column] != "$" and player_life_points > 0:
     time.sleep(.1)
     display_gameboard(player_life_points, dimension, gameboard, board_design)
